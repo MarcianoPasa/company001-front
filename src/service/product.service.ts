@@ -1,0 +1,35 @@
+
+import { inject, Injectable } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Product } from '../model/product.model';
+import { Observable } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class ProductService {
+
+  private readonly http = inject(HttpClient);
+  private readonly API = 'http://localhost:8080/products';
+
+  list(): Observable<Product[]> {
+    return this.http.get<Product[]>(this.API);
+  }
+
+  getById(id: string): Observable<Product> {
+    return this.http.get<Product>(`${this.API}/${id}`);
+  }
+
+  create(product: Product): Observable<Product> {
+    return this.http.post<Product>(this.API, product);
+  }
+
+  update(id: string, product: Product): Observable<Product> {
+    return this.http.put<Product>(`${this.API}/${id}`, product);
+  }
+
+  delete(id: string): Observable<string> {
+    return this.http.delete(`${this.API}/${id}`, { responseType: 'text' });
+  }
+}
+

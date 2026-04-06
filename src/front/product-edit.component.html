@@ -1,0 +1,56 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h2>Editar Produto</h2>
+    </div>
+
+    <div class="card-body">
+      @if (product$ | async) {
+        <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
+
+          <div class="mb-3">
+            <label for="id" class="form-label">ID do Produto</label>
+            <input
+              type="text"
+              class="form-control"
+              id="id"
+              formControlName="idProduct"
+              readonly>
+          </div>
+
+          <div class="mb-3">
+            <label for="name" class="form-label">Nome do Produto</label>
+            <input
+              type="text"
+              class="form-control"
+              id="name"
+              formControlName="name"
+              placeholder="Ex: Teclado Mecânico">
+          </div>
+
+          <div class="mb-3">
+            <label for="value" class="form-label">Preço (R$)</label>
+            <input
+              type="text"
+              class="form-control"
+              id="value"
+              name="valueFormatted"
+              formControlName="valueFormatted"
+              placeholder="0,00">
+          </div>
+
+          <div class="mt-4">
+            <button type="submit" class="btn btn-success me-2" [disabled]="productForm.invalid">
+              Salvar Alterações
+            </button>
+            <button type="button" class="btn btn-secondary me-2" routerLink="/products">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      } @else {
+        <div class="text-center">Carregando dados do produto...</div>
+      }
+    </div>
+  </div>
+</div>

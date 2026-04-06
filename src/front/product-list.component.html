@@ -1,0 +1,50 @@
+<div class="container mt-4">
+  <h2>Lista de Produtos</h2>
+
+  <a routerLink="/products/new" class="btn btn-success">
+    <i class="bi bi-plus-lg"></i>Novo Produto
+  </a>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Nome</th>
+        <th>Preço</th>
+        <th>Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (product of (products$ | async); track product.idProduct) {
+        <tr>
+          <td class="text-nowrap">
+            <code class="text-dark me-2">{{ product.idProduct }}</code>
+            <button
+              class="btn btn-sm btn-outline-secondary border-0"
+              (click)="copyToClipboard(product.idProduct)"
+              title="Copiar Código">
+              <i class="bi bi-clipboard"></i>
+            </button>
+          </td>
+          <td>{{ product.name }}</td>
+          <td>{{ product.value | currency:'BRL' }}</td>
+          <td>
+            <div class="d-flex gap-2">
+              <button [routerLink]="['/products/edit', product.idProduct]" class="btn btn-primary me-2">
+                Editar
+              </button>
+              <button (click)="deleteProduct(product.idProduct)" class="btn btn-danger me-2">
+                Excluir
+              </button>
+            </div>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4" class="text-center">Nenhum produto encontrado.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>
+
