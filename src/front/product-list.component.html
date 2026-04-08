@@ -2,12 +2,12 @@
   <h2>lisa de Produtos</h2>
 
   <div class="d-flex gap-2">
-    <a routerLink="/products/new" class="btn btn-success">
+    <button routerLink="/products/new" class="btn btn-success">
       Novo Produto
-    </a>
-    <a routerLink="/products/principal" class="btn btn-primary">
+    </button>
+    <button routerLink="/products/principal" class="btn btn-primary">
       Menu
-    </a>
+    </button>
   </div>
 
   <table class="table table-striped">
@@ -55,8 +55,10 @@
     <mat-paginator
       [length]="totalElements"
       [pageSize]="pageSize"
+      [pageIndex]="pageState$.value.index"
       [pageSizeOptions]="[5, 10, 20]"
       (page)="handlePageEvent($event)"
+      showFirstLastButtons
       aria-label="Selecionar página">
     </mat-paginator>
   </div>

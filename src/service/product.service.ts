@@ -12,6 +12,15 @@ export class ProductService {
 
   private readonly http = inject(HttpClient);
   private readonly API = 'http://localhost:8080/products';
+  private paginationState = { index: 0, size: 5 };
+
+  setPagination(index: number, size: number) {
+    this.paginationState = { index, size };
+  }
+
+  getPagination() {
+    return this.paginationState;
+  }
 
   list(page: number = 0, size: number = 5): Observable<ProductPage> {
     return this.http.get<ProductPage>(`${this.API}?page=${page}&size=${size}`);
