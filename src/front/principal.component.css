@@ -1,0 +1,13 @@
+.white-color-001 {
+  color: #ffffff;
+}
+
+.button-size-001 {
+  width: 160px;
+  height: 60px;
+  font-weight: bold;
+}
+
+.card {
+  --bs-card-border-color: transparent;
+}
