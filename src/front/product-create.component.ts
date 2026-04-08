@@ -1,14 +1,14 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { ProductService } from '../service/product.service';
 import { Product } from '../model/product.model';
 
 @Component({
   selector: 'app-product-create',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './product-create.component.html'
 })
 export class ProductCreateComponent {
@@ -16,7 +16,8 @@ export class ProductCreateComponent {
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(ProductService);
   private readonly router = inject(Router);
-
+  private readonly location = inject(Location);
+  
   productForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     valueFormatted: ['', Validators.required]
@@ -46,5 +47,9 @@ export class ProductCreateComponent {
         }
       });
     }
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

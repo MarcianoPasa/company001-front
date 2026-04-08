@@ -1,20 +1,25 @@
 <div class="container mt-4">
-  <h2>Lista de Produtos</h2>
+  <h2>lisa de Produtos</h2>
 
-  <a routerLink="/products/new" class="btn btn-success">
-    Novo Produto
-  </a>
+  <div class="d-flex gap-2">
+    <a routerLink="/products/new" class="btn btn-success">
+      Novo Produto
+    </a>
+    <a routerLink="/products/principal" class="btn btn-primary">
+      Menu
+    </a>
+  </div>
 
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>Nome</th>
-        <th>Preço</th>
-        <th>Ações</th>
+        <th style="width: 25%">ID</th>
+        <th style="width: 45%">Nome</th>
+        <th style="width: 15%">Preço</th>
+        <th style="width: 15%">Ações</th>
       </tr>
     </thead>
-    <tbody>
+    <tbody class="align-middle">
       @for (product of (products$ | async); track product.idProduct) {
         <tr>
           <td class="text-nowrap">
@@ -46,4 +51,13 @@
       }
     </tbody>
   </table>
+  <div class="d-flex justify-content-center mt-3">
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="handlePageEvent($event)"
+      aria-label="Selecionar página">
+    </mat-paginator>
+  </div>
 </div>

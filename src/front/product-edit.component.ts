@@ -1,5 +1,5 @@
 import { Component, inject, LOCALE_ID, OnInit } from '@angular/core';
-import { CommonModule, formatNumber } from '@angular/common';
+import { CommonModule, formatNumber, Location } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { ProductService } from '../service/product.service';
@@ -9,7 +9,7 @@ import { Observable, tap } from 'rxjs';
 @Component({
   selector: 'app-product-edit',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterLink],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './product-edit.component.html'
 })
 export class ProductEditComponent implements OnInit {
@@ -18,6 +18,7 @@ export class ProductEditComponent implements OnInit {
   product$!: Observable<Product>;
   productForm!: FormGroup;
   private readonly locale = inject(LOCALE_ID);
+  private readonly location = inject(Location);
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -60,5 +61,9 @@ export class ProductEditComponent implements OnInit {
         this.router.navigate(['/products']);
       });
     }
+  }
+
+  goBack(): void {
+    this.location.back();
   }
 }

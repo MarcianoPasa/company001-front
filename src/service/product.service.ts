@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Product } from '../model/product.model';
 import { Observable } from 'rxjs';
+import { ProductPage } from '../model/product-page.model';
 
 @Injectable({
   providedIn: 'root'
@@ -12,8 +13,8 @@ export class ProductService {
   private readonly http = inject(HttpClient);
   private readonly API = 'http://localhost:8080/products';
 
-  list(): Observable<Product[]> {
-    return this.http.get<Product[]>(this.API);
+  list(page: number = 0, size: number = 5): Observable<ProductPage> {
+    return this.http.get<ProductPage>(`${this.API}?page=${page}&size=${size}`);
   }
 
   getById(id: string): Observable<Product> {
