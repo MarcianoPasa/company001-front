@@ -3,6 +3,7 @@ import { ProductListComponent } from '../front/product-list.component';
 import { ProductEditComponent } from '../front/product-edit.component';
 import { ProductCreateComponent } from '../front/product-create.component';
 import { PrincipalComponent } from '../front/principal.component';
+import { CustomerListComponent } from '../front/customer-list.component';
 
 export const routes: Routes = [
 
@@ -13,6 +14,12 @@ export const routes: Routes = [
   { path: 'products/edit/:id', component: ProductEditComponent },
 
   { path: 'products/new', component: ProductCreateComponent },
+
+  { path: 'customers', component: CustomerListComponent },
+
+  // { path: 'customer/edit/:id', component: CustomerEditComponent },
+
+  // { path: 'customer/new', component: CustomerCreateComponent },
 
   // Se a URL estiver vazia, vá para /produtos
   { path: '', redirectTo: 'pricipal', pathMatch: 'full' },

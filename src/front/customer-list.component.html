@@ -1,0 +1,71 @@
+<div class="container mt-4">
+  <h2>lisa de Clientes</h2>
+
+  <div class="d-flex gap-2">
+    <!--
+    <button routerLink="/customers/new" class="btn btn-success">
+      Novo Cliente
+    </button>
+    -->
+    <button routerLink="/customers/principal" class="btn btn-primary">
+      Menu
+    </button>
+  </div>
+
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th style="width: 18%">ID</th>
+        <th style="width: 30%">Nome fantasia</th>
+        <th style="width: 14%">CNPJ</th>
+        <th style="width: 30%">Razção social</th>
+        <th style="width: 8%">Ações</th>
+      </tr>
+    </thead>
+    <tbody class="align-middle">
+      @for (customer of (customers$ | async); track customer.idCustomer) {
+        <tr>
+          <td class="text-nowrap">
+            <code class="text-dark me-2">{{ customer.idCustomer }}</code>
+            <button
+              class="btn btn-sm btn-outline-secondary border-0"
+              (click)="copyToClipboard(customer.idCustomer)"
+              title="Copiar Código">
+              <i class="bi bi-clipboard"></i>
+            </button>
+          </td>
+          <td>{{ customer.businessName }}</td>
+          <td>{{ customer.businessTaxId | cnpj }}</td>
+          <td>{{ customer.corporateName }}</td>
+          <td>
+            <div class="d-flex gap-2">
+              <!--
+              <button [routerLink]="['/customers/edit', customer.idCustomer]" class="btn btn-primary me-2">
+                Editar
+              </button>
+              -->
+              <button (click)="deleteCustomer(customer.idCustomer)" class="btn btn-danger me-2">
+                Excluir
+              </button>
+            </div>
+          </td>
+        </tr>
+      } @empty {
+        <tr>
+          <td colspan="4" class="text-center">Nenhum Cliente encontrado.</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+  <div class="d-flex justify-content-center mt-3">
+    <mat-paginator
+      [length]="totalElements"
+      [pageSize]="pageSize"
+      [pageIndex]="pageState$.value.index"
+      [pageSizeOptions]="[5, 10, 20]"
+      (page)="handlePageEvent($event)"
+      showFirstLastButtons
+      aria-label="Selecionar página">
+    </mat-paginator>
+  </div>
+</div>

@@ -9,4 +9,5 @@
 
 .card {
   --bs-card-border-color: transparent;
+  margin-bottom: 25px;
 }
