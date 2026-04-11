@@ -9,7 +9,7 @@ import { BehaviorSubject, switchMap } from 'rxjs';
   standalone: true,
   imports: [CommonModule, RouterLink],
   templateUrl: './principal.component.html',
-  styleUrl: './principal.component.css'
+  styleUrl: './principal.component.scss'
 })
 export class PrincipalComponent {
 
