@@ -11,7 +11,7 @@ import { CustomerPage } from '../model/customer-page.model';
 export class CustomerService {
 
   private readonly http = inject(HttpClient);
-  private readonly API = 'http://localhost:8080/customers';
+  private readonly API = 'http://localhost:8081/customers';
   private paginationState = { index: 0, size: 5 };
 
   setPagination(index: number, size: number) {

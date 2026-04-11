@@ -11,7 +11,7 @@ import { ProductPage } from '../model/product-page.model';
 export class ProductService {
 
   private readonly http = inject(HttpClient);
-  private readonly API = 'http://localhost:8080/products';
+  private readonly API = 'http://localhost:8081/products';
   private paginationState = { index: 0, size: 5 };
 
   setPagination(index: number, size: number) {
