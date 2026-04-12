@@ -1,31 +1,57 @@
 pipeline {
-  agent any
+    agent any
 
-  stages {
-
-    stage('Checkout') {
-      steps {
-        checkout scm
-      }
+    environment {
+        IMAGE_NAME = "company001-front"
+        CONTAINER_NAME = "company001-front"
     }
 
-    stage('Build Angular') {
-      steps {
-        bat 'npm install'
-        bat 'npm run build --configuration production'
-      }
+    stages {
+
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                bat 'npm install'
+            }
+        }
+
+        stage('Build Angular') {
+            steps {
+                bat 'npm run build --configuration production'
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                bat 'docker build -t %IMAGE_NAME% .'
+            }
+        }
+
+        stage('Stop Old Container') {
+            steps {
+                bat 'docker rm -f %CONTAINER_NAME% || exit 0'
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                bat 'docker run -d -p 80:80 --name %CONTAINER_NAME% %IMAGE_NAME%'
+            }
+        }
     }
 
-    stage('Docker Build') {
-      steps {
-        bat 'docker build -t company001-front .'
-      }
-    }
+    post {
+        success {
+            echo '✅ Frontend deployado com sucesso'
+        }
 
-    stage('Run Container') {
-      steps {
-        bat 'docker run -d -p 80:80 --name company001-front company001-front'
-      }
+        failure {
+            echo '❌ Falha no pipeline do frontend'
+        }
     }
-  }
 }
