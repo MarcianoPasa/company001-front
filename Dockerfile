@@ -11,7 +11,11 @@ RUN npm run build
 
 FROM nginx:alpine
 
+# Angular build output
 COPY --from=build /app/dist/company001-front/browser/ /usr/share/nginx/html/
+
+# NGINX SPA config (IMPORTANTE)
+COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
 
