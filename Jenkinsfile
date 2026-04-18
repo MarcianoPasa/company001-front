@@ -16,10 +16,10 @@ pipeline {
             }
         }
 
+        // Se estiver assim, mude para main
         stage('Checkout') {
             steps {
-                // O Jenkins baixa o código do repositório configurado no Job
-                checkout scm
+                git branch: 'main', url: 'https://github.com/MarcianoPasa/company001-front.git'
             }
         }
 
