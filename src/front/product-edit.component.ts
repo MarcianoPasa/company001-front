@@ -1,7 +1,7 @@
 import { Component, inject, LOCALE_ID, OnInit } from '@angular/core';
 import { CommonModule, formatNumber, Location } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../service/product.service';
 import { Product } from '../model/product.model';
 import { Observable, tap } from 'rxjs';
@@ -49,7 +49,6 @@ export class ProductEditComponent implements OnInit {
   saveProduct(): void {
     if (this.productForm.valid) {
       const formValue = this.productForm.getRawValue();
-
       const rawValue = formValue.valueFormatted.replaceAll('.', '').replaceAll(',', '.');
 
       const product: Product = {

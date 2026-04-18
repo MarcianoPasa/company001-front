@@ -3,7 +3,10 @@ export interface Customer {
   businessName: string;
   corporateName: string;
   businessTaxId: string;
-  _links?: any;
+  value: number;
+  _links?: {
+    self?: {
+      href: string;
+    }
+  };
 }
-
-

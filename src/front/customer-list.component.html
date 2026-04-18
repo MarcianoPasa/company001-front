@@ -39,11 +39,16 @@
           <td>{{ customer.corporateName }}</td>
           <td>
             <div class="d-flex gap-2">
-              <!--
+              <a *ngIf="customer._links?.self"
+                [href]="customer._links?.self?.href"
+                target="_blank"
+                class="btn btn-info me-2 text-white">
+                Detalhes (API)
+              </a>
+
               <button [routerLink]="['/customers/edit', customer.idCustomer]" class="btn btn-primary me-2">
                 Editar
               </button>
-              -->
               <button (click)="deleteCustomer(customer.idCustomer)" class="btn btn-danger me-2">
                 Excluir
               </button>

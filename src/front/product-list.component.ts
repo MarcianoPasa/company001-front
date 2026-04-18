@@ -47,26 +47,6 @@ export class ProductListComponent {
       })
   );
 
-  // readonly products$: Observable<Product[]> = combineLatest([
-  //   this.refresh$,
-  //   this.pageState$
-  // ]).pipe(
-  //   tap(() => this.loading = true),
-
-  //   switchMap(([_, page]) =>
-  //     this.service.list(page.index, page.size)
-  //   ),
-
-  //   tap((res: any) => {
-  //     this.totalElements = res.page?.totalElements ?? 0;
-  //     this.loading = false;
-  //   }),
-
-  //   map((res: any) =>
-  //     res._embedded?.productModelList ?? []
-  //   )
-  // );
-
   deleteProduct(id: string): void {
     if (confirm('Tem certeza?')) {
       this.service.delete(id).subscribe({

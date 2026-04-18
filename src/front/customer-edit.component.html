@@ -1,0 +1,66 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h2>Editar cliente</h2>
+    </div>
+
+    <div class="card-body">
+      @if (customer$ | async) {
+        <form [formGroup]="customerForm" (ngSubmit)="saveCustomer()">
+
+          <div class="mb-3">
+            <label for="id" class="form-label">ID do cliente</label>
+            <input
+              type="text"
+              class="form-control"
+              id="id"
+              formControlName="idCustomer"
+              readonly>
+          </div>
+
+          <div class="mb-3">
+            <label for="businessName" class="form-label">Nome do cliente</label>
+            <input
+              type="text"
+              class="form-control"
+              id="businessName"
+              formControlName="businessName"
+              placeholder="Ex: Loja & Cia Ltda">
+          </div>
+
+          <div class="mb-3">
+            <label for="businessTaxId" class="form-label">CNPJ</label>
+            <input
+              type="text"
+              class="form-control"
+              id="businessTaxId"
+              formControlName="businessTaxId"
+              placeholder="00.000.000/0000-00"
+              appCnpjMask>
+          </div>
+
+          <div class="mb-3">
+            <label for="corporateName" class="form-label">Razão social</label>
+            <input
+              type="text"
+              class="form-control"
+              id="corporateName"
+              formControlName="corporateName"
+              placeholder="Ex: Razão social loja & cia ltda">
+          </div>
+
+          <div class="mt-4">
+            <button type="submit" class="btn btn-success me-2" [disabled]="customerForm.invalid">
+              Salvar Alterações
+            </button>
+            <button type="button" class="btn btn-secondary me-2" (click)="goBack()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      } @else {
+        <div class="text-center">Carregando dados do cliente...</div>
+      }
+    </div>
+  </div>
+</div>

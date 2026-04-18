@@ -1,8 +1,6 @@
-import { Component, inject } from '@angular/core';
-import { ProductService } from '../service/product.service';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from "@angular/router";
-import { BehaviorSubject, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-product-list',

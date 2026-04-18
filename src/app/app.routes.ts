@@ -4,6 +4,7 @@ import { ProductEditComponent } from '../front/product-edit.component';
 import { ProductCreateComponent } from '../front/product-create.component';
 import { PrincipalComponent } from '../front/principal.component';
 import { CustomerListComponent } from '../front/customer-list.component';
+import { CustomerEditComponent } from '../front/customer-edit.component';
 
 export const routes: Routes = [
 
@@ -17,7 +18,7 @@ export const routes: Routes = [
 
   { path: 'customers', component: CustomerListComponent },
 
-  // { path: 'customer/edit/:id', component: CustomerEditComponent },
+  { path: 'customers/edit/:id', component: CustomerEditComponent },
 
   // { path: 'customer/new', component: CustomerCreateComponent },
 
