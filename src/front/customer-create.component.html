@@ -1,0 +1,57 @@
+<div class="container mt-4">
+  <div class="card">
+    <div class="card-header">
+      <h2 class="mb-0">Cadastrar novo cliente</h2>
+    </div>
+
+    <div class="card-body">
+      <form [formGroup]="customerForm" (ngSubmit)="saveCustomer()">
+        <div class="mb-3">
+          <label for="businessName" class="form-label">Nome do cliente</label>
+          <input
+            type="text"
+            class="form-control"
+            id="businessName"
+            formControlName="businessName"
+            [class.is-invalid]="customerForm.get('businessName')?.invalid && customerForm.get('businessName')?.touched"
+            placeholder="Ex: Silva e Filhos">
+          <div class="invalid-feedback">O nome é obrigatório (mínimo 3 caracteres).</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="corporateName" class="form-label">Razão social</label>
+          <input
+            type="text"
+            class="form-control"
+            id="corporateName"
+            formControlName="corporateName"
+            [class.is-invalid]="customerForm.get('corporateName')?.invalid && customerForm.get('corporateName')?.touched"
+            placeholder="Ex: Silva e Filhos LTDA">
+          <div class="invalid-feedback">A razão social é obrigatória (mínimo 3 caracteres).</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="businessTaxId" class="form-label">CNPJ</label>
+          <input
+            type="text"
+            class="form-control"
+            id="businessTaxId"
+            formControlName="businessTaxId"
+            [class.is-invalid]="customerForm.get('businessTaxId')?.invalid && customerForm.get('businessTaxId')?.touched"
+            placeholder="00.000.000/0000-00"
+            maxlength="18"
+            appCnpjMask> <div class="invalid-feedback">O CNPJ é obrigatório.</div>
+        </div>
+
+        <div class="mt-4">
+          <button type="submit" class="btn btn-success me-2" [disabled]="customerForm.invalid">
+            Salvar cliente
+          </button>
+          <button type="button" class="btn btn-secondary me-2" (click)="goBack()">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

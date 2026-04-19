@@ -1,21 +1,21 @@
 <div class="container mt-4">
   <div class="card">
     <div class="card-header">
-      <h2 class="mb-0">Cadastrar Novo Produto</h2>
+      <h2 class="mb-0">Cadastrar novo produto</h2>
     </div>
 
     <div class="card-body">
       <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
 
         <div class="mb-3">
-          <label for="name" class="form-label">Nome do Produto</label>
+          <label for="name" class="form-label">Nome do produto</label>
           <input
             type="text"
             class="form-control"
             id="name"
             formControlName="name"
             [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched"
-            placeholder="Ex: Teclado Mecânico RGB">
+            placeholder="Ex: Teclado mecânico RGB">
           <div class="invalid-feedback">O nome é obrigatório (mínimo 3 caracteres).</div>
         </div>
 
@@ -33,7 +33,7 @@
 
         <div class="mt-4">
           <button type="submit" class="btn btn-success me-2" [disabled]="productForm.invalid">
-            Salvar Produto
+            Salvar produto
           </button>
           <button type="button" class="btn btn-secondary me-2" (click)="goBack()">
             Cancelar

@@ -45,6 +45,7 @@ export class CustomerEditComponent implements OnInit {
       this.customer$ = this.service.getById(this.id).pipe(
         tap(customer => this.customerForm.patchValue({
           ...customer,
+          idCustomer: customer.idCustomer,
           businessTaxId: this.cnpjPipe.transform(customer.businessTaxId),
           valueFormatted: formatNumber(customer.value, this.locale, '1.2-2')
         }))
@@ -71,26 +72,6 @@ export class CustomerEditComponent implements OnInit {
       });
     }
   }
-
-  // saveCustomer(): void {
-  //   if (this.customerForm.valid) {
-  //     const formValue = this.customerForm.getRawValue();
-
-  //     const customerToSave = {
-  //       ...formValue,
-  //       businessTaxId: formValue.businessTaxId.replace(/\D/g, ''),
-  //       value: Number.parseFloat(formValue.valueFormatted.replace(/\D/g, '')) / 100
-  //     };
-
-  //     this.service.update(this.id, customerToSave).subscribe(() => {
-  //       this.router.navigate(['/customers']);
-  //     });
-
-  //     this.service.update(this.id, customerToSave).subscribe(() => {
-  //       this.router.navigate(['/customers']);
-  //     });
-  //   }
-  // }
 
   goBack(): void {
     this.location.back();

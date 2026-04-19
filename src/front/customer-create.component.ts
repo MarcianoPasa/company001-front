@@ -1,0 +1,59 @@
+import { Component, inject } from '@angular/core';
+import { CommonModule, Location } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
+import { CustomerService } from '../service/customer.service';
+import { Customer } from '../model/customer.model';
+import { CnpjPipe } from '../app/shared/cnpj.pipe';
+import { CnpjMaskDirective } from '../app/shared/cnpj-mask.directive';
+
+@Component({
+  selector: 'app-customer-create',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, CnpjMaskDirective],
+  providers: [CnpjPipe],
+  templateUrl: './customer-create.component.html'
+})
+export class CustomerCreateComponent {
+
+  private readonly fb = inject(FormBuilder);
+  private readonly service = inject(CustomerService);
+  private readonly router = inject(Router);
+  private readonly location = inject(Location);
+  private readonly cnpjPipe = inject(CnpjPipe);
+
+  customerForm: FormGroup = this.fb.group({
+    businessName: ['', [Validators.required, Validators.minLength(3)]],
+    corporateName: ['', [Validators.required, Validators.minLength(3)]],
+    businessTaxId: ['', [Validators.required]]
+  });
+
+  saveCustomer(): void {
+    if (this.customerForm.valid) {
+      const formValue = this.customerForm.getRawValue();
+      const taxIdRaw = (formValue.businessTaxId || '').replace(/\D/g, '');
+      const valueStr = formValue.valueFormatted || '0';
+      const rawValue = valueStr.replaceAll('.', '').replaceAll(',', '.');
+
+      const customer: Customer = {
+        ...formValue,
+        businessTaxId: taxIdRaw,
+        value: Number.parseFloat(rawValue) || 0
+      };
+
+      this.service.create(customer).subscribe({
+        next: () => {
+          this.router.navigate(['/customers']);
+        },
+        error: (err) => {
+          console.error('Erro ao criar produto:', err);
+          alert('Erro ao salvar o produto. Verifique o console.');
+        }
+      });
+    }
+  }
+
+  goBack(): void {
+    this.location.back();
+  }
+}
