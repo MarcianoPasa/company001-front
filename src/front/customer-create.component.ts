@@ -16,13 +16,12 @@ import { CnpjMaskDirective } from '../app/shared/cnpj-mask.directive';
 })
 export class CustomerCreateComponent {
 
-  private readonly fb = inject(FormBuilder);
+  private readonly formBuilder = inject(FormBuilder);
   private readonly service = inject(CustomerService);
   private readonly router = inject(Router);
   private readonly location = inject(Location);
-  private readonly cnpjPipe = inject(CnpjPipe);
 
-  customerForm: FormGroup = this.fb.group({
+  customerForm: FormGroup = this.formBuilder.group({
     businessName: ['', [Validators.required, Validators.minLength(3)]],
     corporateName: ['', [Validators.required, Validators.minLength(3)]],
     businessTaxId: ['', [Validators.required]]
@@ -42,9 +41,7 @@ export class CustomerCreateComponent {
       };
 
       this.service.create(customer).subscribe({
-        next: () => {
-          this.router.navigate(['/customers']);
-        },
+        next: () => this.router.navigate(['/customers']),
         error: (err) => {
           console.error('Erro ao criar produto:', err);
           alert('Erro ao salvar o produto. Verifique o console.');

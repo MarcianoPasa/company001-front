@@ -37,3 +37,23 @@ body {
   height: 100%;
 }
 /* You can add global styles to this file, and also import other style files */
+
+.button-list-color-mine-001 {
+  background-color: #33bbff;
+  color: #000;
+}
+
+.button-list-color-mine-001:hover {
+  background-color: #33bbff !important;
+  color: #000 !important;
+}
+
+.button-new-color-mine-001 {
+  background-color: #00cc00;
+  color: #000;
+}
+
+.button-new-color-mine-001:hover {
+  background-color: #00cc00 !important;
+  color: #000 !important;
+}

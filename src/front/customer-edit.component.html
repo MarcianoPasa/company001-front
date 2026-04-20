@@ -10,12 +10,21 @@
 
           <div class="mb-3">
             <label for="id" class="form-label">ID do cliente</label>
-            <input
-              type="text"
-              class="form-control"
-              id="id"
-              formControlName="idCustomer"
-              readonly>
+            <div class="input-group">
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                title="Copiar ID"
+                (click)="copyToClipboard()">
+                <i class="bi bi-clipboard"></i>
+              </button>
+              <input
+                type="text"
+                class="form-control"
+                id="id"
+                formControlName="idCustomer"
+                readonly>
+              </div>
           </div>
 
           <div class="mb-3">
@@ -52,7 +61,7 @@
 
           <div class="mt-4">
             <button type="submit" class="btn btn-success me-2" [disabled]="customerForm.invalid">
-              Salvar Alterações
+              Salvar alterações
             </button>
             <button type="button" class="btn btn-secondary me-2" (click)="goBack()">
               Cancelar

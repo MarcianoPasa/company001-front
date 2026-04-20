@@ -1,7 +1,7 @@
 <div class="container mt-4">
   <div class="card">
     <div class="card-header">
-      <h2>Editar Produto</h2>
+      <h2>Editar produto</h2>
     </div>
 
     <div class="card-body">
@@ -10,12 +10,21 @@
 
           <div class="mb-3">
             <label for="id" class="form-label">ID do produto</label>
-            <input
-              type="text"
-              class="form-control"
-              id="id"
-              formControlName="idProduct"
-              readonly>
+            <div class="input-group">
+              <button
+                class="btn btn-outline-secondary"
+                type="button"
+                title="Copiar ID"
+                (click)="copyToClipboard()">
+                <i class="bi bi-clipboard"></i>
+              </button>
+              <input
+                type="text"
+                class="form-control"
+                id="id"
+                formControlName="idProduct"
+                readonly>
+              </div>
           </div>
 
           <div class="mb-3">
@@ -41,7 +50,7 @@
 
           <div class="mt-4">
             <button type="submit" class="btn btn-success me-2" [disabled]="productForm.invalid">
-              Salvar Alterações
+              Salvar alterações
             </button>
             <button type="button" class="btn btn-secondary me-2" (click)="goBack()">
               Cancelar

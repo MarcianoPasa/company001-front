@@ -65,4 +65,15 @@ export class ProductEditComponent implements OnInit {
   goBack(): void {
     this.location.back();
   }
+
+  copyToClipboard(): void {
+    const id = this.productForm.getRawValue().idProduct;
+    if (id) {
+      navigator.clipboard.writeText(id).then(() => {
+        console.log('ID copiado!');
+      }).catch(err => {
+        console.error('Erro ao copiar ID:', err);
+      });
+    }
+  }
 }

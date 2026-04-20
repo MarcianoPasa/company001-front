@@ -28,11 +28,11 @@ export class CustomerEditComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly service: CustomerService,
     private readonly router: Router,
-    private readonly fb: FormBuilder
+    private readonly formBuilder: FormBuilder
   ) {}
 
   ngOnInit(): void {
-    this.customerForm = this.fb.group({
+    this.customerForm = this.formBuilder.group({
       idCustomer: [{ value: '', disabled: true }],
       businessName: ['', Validators.required],
       corporateName: ['', Validators.required],
@@ -56,7 +56,7 @@ export class CustomerEditComponent implements OnInit {
   saveCustomer(): void {
     if (this.customerForm.valid) {
       const formValue = this.customerForm.getRawValue();
-      const taxIdRaw = (formValue.businessTaxId || '').replace(/\D/g, '');
+      const taxIdRaw = (formValue.businessTaxId || '').replaceAll(/\D/g, '');
       const valueStr = formValue.valueFormatted || '0';
       const rawValue = valueStr.replaceAll('.', '').replaceAll(',', '.');
 
@@ -68,12 +68,26 @@ export class CustomerEditComponent implements OnInit {
 
       this.service.update(this.id, customer).subscribe({
         next: () => this.router.navigate(['/customers']),
-        error: (err) => console.error('Erro ao atualizar:', err)
+        error: (err) => {
+          console.error('Erro ao atualizar o produto:', err)
+          alert('Erro ao atualizar o produto. Verifique o console.');
+        }
       });
     }
   }
 
   goBack(): void {
     this.location.back();
+  }
+
+  copyToClipboard(): void {
+    const id = this.customerForm.getRawValue().idCustomer;
+    if (id) {
+      navigator.clipboard.writeText(id).then(() => {
+        console.log('ID copiado!');
+      }).catch(err => {
+        console.error('Erro ao copiar ID:', err);
+      });
+    }
   }
 }
