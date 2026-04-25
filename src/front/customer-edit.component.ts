@@ -7,6 +7,7 @@ import { Customer } from '../model/customer.model';
 import { Observable, tap } from 'rxjs';
 import { CnpjMaskDirective } from '../app/shared/cnpj-mask.directive';
 import { CnpjPipe } from '../app/shared/cnpj.pipe';
+import { NotificationService } from '../app/shared/snack-bar.component';
 
 @Component({
   selector: 'app-customer-edit',
@@ -20,6 +21,8 @@ export class CustomerEditComponent implements OnInit {
   id: string = '';
   customer$!: Observable<Customer>;
   customerForm!: FormGroup;
+
+  private readonly notification = inject(NotificationService);
   private readonly locale = inject(LOCALE_ID);
   private readonly location = inject(Location);
   private readonly cnpjPipe = inject(CnpjPipe);
@@ -67,10 +70,13 @@ export class CustomerEditComponent implements OnInit {
       };
 
       this.service.update(this.id, customer).subscribe({
-        next: () => this.router.navigate(['/customers']),
+        next: () => {
+          this.router.navigate(['/customers']);
+          this.notification.showMessage('Cliente atualizado com sucesso', 'snack-success');
+        },
         error: (err) => {
-          console.error('Erro ao atualizar o produto:', err)
-          alert('Erro ao atualizar o produto. Verifique o console.');
+          console.error('Erro ao atualizar o cliente:', err);
+          this.notification.showMessage('Erro ao atualizar o cliente. Verifique o console.', 'snack-error ');
         }
       });
     }
@@ -84,9 +90,11 @@ export class CustomerEditComponent implements OnInit {
     const id = this.customerForm.getRawValue().idCustomer;
     if (id) {
       navigator.clipboard.writeText(id).then(() => {
-        console.log('ID copiado!');
+        console.log('ID copiado para a área de transferência');
+        this.notification.showMessage('ID copiado para a área de transferência', 'snack-success');
       }).catch(err => {
         console.error('Erro ao copiar ID:', err);
+        this.notification.showMessage('Erro ao copiar ID', 'snack-error');
       });
     }
   }

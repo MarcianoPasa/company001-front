@@ -6,6 +6,7 @@ import { BehaviorSubject, combineLatest, map, Observable, switchMap, tap} from '
 import { ProductPaginatorIntl } from './product-paginator-intl-0001';
 import { MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { Product } from '../model/product.model';
+import { NotificationService } from '../app/shared/snack-bar.component';
 
 @Component({
   selector: 'app-product-list',
@@ -18,6 +19,7 @@ import { Product } from '../model/product.model';
 })
 export class ProductListComponent {
 
+  private readonly notification = inject(NotificationService);
   private readonly service = inject(ProductService);
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
   private readonly savedState = this.service.getPagination();
@@ -52,6 +54,7 @@ export class ProductListComponent {
       this.service.delete(id).subscribe({
         next: () => {
           this.refresh$.next();
+          this.notification.showMessage('Produto excluído com sucesso', 'snack-error');
         }
       });
     }
@@ -60,8 +63,10 @@ export class ProductListComponent {
   copyToClipboard(id: string): void {
     navigator.clipboard.writeText(id).then(() => {
       console.log('ID copiado para a área de transferência!');
+      this.notification.showMessage('ID copiado para a área de transferência', 'snack-success');
     }).catch(err => {
       console.error('Erro ao copiar ID:', err);
+      this.notification.showMessage('Erro ao copiar ID', 'snack-error');
     });
   }
 

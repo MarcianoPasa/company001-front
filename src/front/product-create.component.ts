@@ -4,6 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router } from '@angular/router';
 import { ProductService } from '../service/product.service';
 import { Product } from '../model/product.model';
+import { NotificationService } from '../app/shared/snack-bar.component';
 
 @Component({
   selector: 'app-product-create',
@@ -13,11 +14,12 @@ import { Product } from '../model/product.model';
 })
 export class ProductCreateComponent {
 
+  private readonly notification = inject(NotificationService);
   private readonly fb = inject(FormBuilder);
   private readonly service = inject(ProductService);
   private readonly router = inject(Router);
   private readonly location = inject(Location);
-  
+
   productForm: FormGroup = this.fb.group({
     name: ['', [Validators.required, Validators.minLength(3)]],
     valueFormatted: ['', Validators.required]
@@ -40,10 +42,11 @@ export class ProductCreateComponent {
       this.service.create(newProduct).subscribe({
         next: () => {
           this.router.navigate(['/products']);
+          this.notification.showMessage('Produto salvo com sucesso', 'snack-success');
         },
         error: (err) => {
-          console.error('Erro ao criar produto:', err);
-          alert('Erro ao salvar o produto. Verifique o console.');
+          console.error('Erro ao salvar o produto:', err);
+          this.notification.showMessage('Erro ao salvar o produto', 'snack-error');
         }
       });
     }

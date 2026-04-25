@@ -10,7 +10,7 @@
     </button>
   </div>
 
-  <table class="table table-striped">
+  <table class="table table-striped table-hover-mine-001">
     <thead>
       <tr>
         <th style="width: 25%">ID</th>
@@ -35,13 +35,13 @@
           <td>{{ product.value | currency:'BRL' }}</td>
           <td>
             <div class="d-flex gap-2">
-              <a *ngIf="product._links?.self"
-                [href]="product._links?.self?.href"
-                target="_blank"
-                class="btn btn-info me-2 text-white">
-                Detalhes (API)
-              </a>
-
+              @if (product._links?.self) {
+                <a [href]="product._links?.self?.href"
+                  target="_blank"
+                  class="btn btn-info me-2 text-white">
+                  Detalhes (API)
+                </a>
+              }
               <button [routerLink]="['/products/edit', product.idProduct]" class="btn btn-primary me-2">
                 Editar
               </button>

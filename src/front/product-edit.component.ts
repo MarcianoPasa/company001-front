@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../service/product.service';
 import { Product } from '../model/product.model';
 import { Observable, tap } from 'rxjs';
+import { NotificationService } from '../app/shared/snack-bar.component';
 
 @Component({
   selector: 'app-product-edit',
@@ -17,6 +18,8 @@ export class ProductEditComponent implements OnInit {
   id: string = '';
   product$!: Observable<Product>;
   productForm!: FormGroup;
+
+  private readonly notification = inject(NotificationService);
   private readonly locale = inject(LOCALE_ID);
   private readonly location = inject(Location);
 
@@ -58,6 +61,7 @@ export class ProductEditComponent implements OnInit {
 
       this.service.update(this.id, product).subscribe(() => {
         this.router.navigate(['/products']);
+        this.notification.showMessage('Produto salvo com sucesso', 'snack-success');
       });
     }
   }

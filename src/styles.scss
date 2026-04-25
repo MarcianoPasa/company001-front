@@ -57,3 +57,52 @@ body {
   background-color: #00cc00 !important;
   color: #000 !important;
 }
+
+.table-hover-mine-001 tbody tr:hover td {
+  background-color: #BDBDBD !important;
+  transition: background-color 0.2s ease;
+  color: #000;
+  font-weight: 600;
+}
+
+.snack-success {
+  .mdc-snackbar__surface {
+    background-color: #04a704 !important;
+  }
+}
+
+.snack-error {
+  .mdc-snackbar__surface {
+    background-color: #a52834 !important;
+  }
+}
+
+.snack-success, .snack-error {
+  .mdc-snackbar__label {
+    color: #ffffff !important;
+    text-align: center !important;
+    flex-grow: 1;
+    padding-right: 10px !important;
+    padding-left: 10px !important;
+  }
+
+  .mdc-snackbar__action {
+    button {
+      color: #dc3545 !important;
+    }
+
+    display: flex;
+    justify-content: center;
+    background-color: #dc3545 !important;
+    border-radius: 5px !important;
+  }
+
+  .mdc-button__label {
+    color: #ffffff !important;
+  }
+}
+
+.mat-mdc-snack-bar-container .mat-mdc-button.mat-mdc-snack-bar-action:not(:disabled) {
+    --mat-button-text-state-layer-color: #000 !important;
+    --mat-button-text-ripple-color: #000 !important;
+}

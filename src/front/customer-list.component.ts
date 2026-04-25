@@ -7,11 +7,12 @@ import { CustomerPaginatorIntl } from './customer-paginator-intl-0001';
 import { MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { Customer } from '../model/customer.model';
 import { CnpjPipe } from '../app/shared/cnpj.pipe';
+import { NotificationService } from '../app/shared/snack-bar.component';
 
 @Component({
   selector: 'app-customer-list',
   standalone: true,
-  imports: [CommonModule, RouterLink, MatPaginatorModule, CnpjPipe],
+  imports: [CommonModule, RouterLink, MatPaginatorModule, CnpjPipe ],
   templateUrl: './customer-list.component.html',
   providers: [
     { provide: MatPaginatorIntl, useClass: CustomerPaginatorIntl }
@@ -19,6 +20,7 @@ import { CnpjPipe } from '../app/shared/cnpj.pipe';
 })
 export class CustomerListComponent {
 
+  private readonly notification = inject(NotificationService);
   private readonly service = inject(CustomerService);
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
   private readonly savedState = this.service.getPagination();
@@ -53,6 +55,7 @@ export class CustomerListComponent {
       this.service.delete(id).subscribe({
         next: () => {
           this.refresh$.next();
+          this.notification.showMessage('Produto excluído com sucesso', 'snack-error');
         }
       });
     }
@@ -61,8 +64,10 @@ export class CustomerListComponent {
   copyToClipboard(id: string): void {
     navigator.clipboard.writeText(id).then(() => {
       console.log('ID copiado para a área de transferência!');
+      this.notification.showMessage('ID copiado para a área de transferência', 'snack-success');
     }).catch(err => {
       console.error('Erro ao copiar ID:', err);
+      this.notification.showMessage('Erro ao copiar ID', 'snack-success');
     });
   }
 

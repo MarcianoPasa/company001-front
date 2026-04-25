@@ -6,6 +6,7 @@ import { CustomerService } from '../service/customer.service';
 import { Customer } from '../model/customer.model';
 import { CnpjPipe } from '../app/shared/cnpj.pipe';
 import { CnpjMaskDirective } from '../app/shared/cnpj-mask.directive';
+import { NotificationService } from '../app/shared/snack-bar.component';
 
 @Component({
   selector: 'app-customer-create',
@@ -16,6 +17,7 @@ import { CnpjMaskDirective } from '../app/shared/cnpj-mask.directive';
 })
 export class CustomerCreateComponent {
 
+  private readonly notification = inject(NotificationService);
   private readonly formBuilder = inject(FormBuilder);
   private readonly service = inject(CustomerService);
   private readonly router = inject(Router);
@@ -41,10 +43,14 @@ export class CustomerCreateComponent {
       };
 
       this.service.create(customer).subscribe({
-        next: () => this.router.navigate(['/customers']),
+        next: () => {
+          this.router.navigate(['/customers']);
+          console.error('Cliente criado com sucesso');
+          this.notification.showMessage('Cliente salvo com sucesso', 'snack-success');
+        },
         error: (err) => {
-          console.error('Erro ao criar produto:', err);
-          alert('Erro ao salvar o produto. Verifique o console.');
+          console.error('Erro ao salvar o cliente:', err);
+          this.notification.showMessage('Erro ao salvar o cliente', 'snack-error');
         }
       });
     }
