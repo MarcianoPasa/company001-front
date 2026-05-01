@@ -6,8 +6,11 @@ import { BehaviorSubject, combineLatest, map, Observable, switchMap, tap} from '
 import { CustomerPaginatorIntl } from './customer-paginator-intl-0001';
 import { MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { Customer } from '../model/customer.model';
-import { CnpjPipe } from '../app/shared/cnpj.pipe';
-import { NotificationService } from '../app/shared/snack-bar.component';
+import { CnpjPipe } from '../app/shared/pipes/cnpj.pipe';
+import { NotificationService } from '../app/shared/services/notification.service';
+import { ConfirmDialogComponent } from './confirm-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { ClipboardService } from '../app/shared/services/clipboard.service';
 
 @Component({
   selector: 'app-customer-list',
@@ -24,6 +27,8 @@ export class CustomerListComponent {
   private readonly service = inject(CustomerService);
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
   private readonly savedState = this.service.getPagination();
+  private readonly dialog = inject(MatDialog);
+  private readonly clipboardService = inject(ClipboardService);
 
   totalElements = 0;
   pageSize = 5;
@@ -50,25 +55,31 @@ export class CustomerListComponent {
       })
   );
 
-  deleteCustomer(id: string): void {
-    if (confirm('Tem certeza?')) {
-      this.service.delete(id).subscribe({
-        next: () => {
-          this.refresh$.next();
-          this.notification.showMessage('Produto excluído com sucesso', 'snack-error');
-        }
-      });
-    }
+  deleteCustomer(customer: Customer): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '450px',
+      data: { name: customer.businessName, who: 'o cliente' },
+      autoFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.service.delete(customer.idCustomer).subscribe({
+          next: () => {
+            this.refresh$.next();
+            this.notification.showMessage('Cliente excluído com sucesso', 'snack-success');
+          },
+          error: (err) => {
+            console.error('Erro ao excluir cliente', err);
+            this.notification.showMessage('Erro ao excluir cliente.', 'snack-error')
+          }
+        });
+      }
+    });
   }
 
   copyToClipboard(id: string): void {
-    navigator.clipboard.writeText(id).then(() => {
-      console.log('ID copiado para a área de transferência!');
-      this.notification.showMessage('ID copiado para a área de transferência', 'snack-success');
-    }).catch(err => {
-      console.error('Erro ao copiar ID:', err);
-      this.notification.showMessage('Erro ao copiar ID', 'snack-success');
-    });
+    this.clipboardService.copyToClipboard(id);
   }
 
   handlePageEvent(e: PageEvent) {

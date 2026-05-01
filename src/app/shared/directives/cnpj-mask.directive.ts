@@ -6,7 +6,8 @@ import { NgControl } from '@angular/forms';
   standalone: true
 })
 export class CnpjMaskDirective {
-  constructor(private ngControl: NgControl) {}
+
+  constructor(private readonly ngControl: NgControl) {}
 
   @HostListener('input', ['$event'])
   onInput(event: any) {
@@ -41,6 +42,7 @@ export class CnpjMaskDirective {
   onBlur() {
     const value = this.ngControl.control?.value;
     if (value && value.length !== 18) {
+      this.ngControl.control?.setValue('', { emitEvent: false });
     }
   }
 }

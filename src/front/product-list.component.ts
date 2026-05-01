@@ -6,7 +6,10 @@ import { BehaviorSubject, combineLatest, map, Observable, switchMap, tap} from '
 import { ProductPaginatorIntl } from './product-paginator-intl-0001';
 import { MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { Product } from '../model/product.model';
-import { NotificationService } from '../app/shared/snack-bar.component';
+import { NotificationService } from '../app/shared/services/notification.service';
+import { MatDialog } from '@angular/material/dialog';
+import { ConfirmDialogComponent } from './confirm-dialog.component';
+import { ClipboardService } from '../app/shared/services/clipboard.service';
 
 @Component({
   selector: 'app-product-list',
@@ -23,6 +26,8 @@ export class ProductListComponent {
   private readonly service = inject(ProductService);
   private readonly refresh$ = new BehaviorSubject<void>(undefined);
   private readonly savedState = this.service.getPagination();
+  private readonly dialog = inject(MatDialog);
+  private readonly clipboardService = inject(ClipboardService);
 
   totalElements = 0;
   pageSize = 5;
@@ -49,25 +54,31 @@ export class ProductListComponent {
       })
   );
 
-  deleteProduct(id: string): void {
-    if (confirm('Tem certeza?')) {
-      this.service.delete(id).subscribe({
-        next: () => {
-          this.refresh$.next();
-          this.notification.showMessage('Produto excluído com sucesso', 'snack-error');
-        }
-      });
-    }
+  deleteProduct(product: Product): void {
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      width: '450px',
+      data: { name: product.name, who: 'o produto' },
+      autoFocus: false
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result) {
+        this.service.delete(product.idProduct).subscribe({
+          next: () => {
+            this.refresh$.next();
+            this.notification.showMessage('Produto excluído com sucesso', 'snack-success');
+          },
+          error: (err) => {
+            console.error('Erro ao excluir produto', err);
+            this.notification.showMessage('Erro ao excluir produto', 'snack-error');
+          }
+        });
+      }
+    });
   }
 
   copyToClipboard(id: string): void {
-    navigator.clipboard.writeText(id).then(() => {
-      console.log('ID copiado para a área de transferência!');
-      this.notification.showMessage('ID copiado para a área de transferência', 'snack-success');
-    }).catch(err => {
-      console.error('Erro ao copiar ID:', err);
-      this.notification.showMessage('Erro ao copiar ID', 'snack-error');
-    });
+    this.clipboardService.copyToClipboard(id);
   }
 
   handlePageEvent(e: PageEvent) {

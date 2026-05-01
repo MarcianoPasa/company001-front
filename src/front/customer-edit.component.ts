@@ -5,9 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { CustomerService } from '../service/customer.service';
 import { Customer } from '../model/customer.model';
 import { Observable, tap } from 'rxjs';
-import { CnpjMaskDirective } from '../app/shared/cnpj-mask.directive';
-import { CnpjPipe } from '../app/shared/cnpj.pipe';
-import { NotificationService } from '../app/shared/snack-bar.component';
+import { CnpjMaskDirective } from '../app/shared/directives/cnpj-mask.directive';
+import { CnpjPipe } from '../app/shared/pipes/cnpj.pipe';
+import { NotificationService } from '../app/shared/services/notification.service';
+import { ClipboardService } from '../app/shared/services/clipboard.service';
 
 @Component({
   selector: 'app-customer-edit',
@@ -26,6 +27,7 @@ export class CustomerEditComponent implements OnInit {
   private readonly locale = inject(LOCALE_ID);
   private readonly location = inject(Location);
   private readonly cnpjPipe = inject(CnpjPipe);
+  private readonly clipboardService = inject(ClipboardService);
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -89,13 +91,7 @@ export class CustomerEditComponent implements OnInit {
   copyToClipboard(): void {
     const id = this.customerForm.getRawValue().idCustomer;
     if (id) {
-      navigator.clipboard.writeText(id).then(() => {
-        console.log('ID copiado para a área de transferência');
-        this.notification.showMessage('ID copiado para a área de transferência', 'snack-success');
-      }).catch(err => {
-        console.error('Erro ao copiar ID:', err);
-        this.notification.showMessage('Erro ao copiar ID', 'snack-error');
-      });
+      this.clipboardService.copyToClipboard(id);
     }
   }
 }

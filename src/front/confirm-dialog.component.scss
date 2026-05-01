@@ -1,0 +1,19 @@
+:host {
+  display: block;
+  padding: 10px;
+}
+
+mat-dialog-content {
+  min-width: 300px;
+  max-width: 450px;
+}
+
+h2 {
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+}
+
+.btn {
+  min-width: 100px;
+}

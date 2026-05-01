@@ -5,7 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../service/product.service';
 import { Product } from '../model/product.model';
 import { Observable, tap } from 'rxjs';
-import { NotificationService } from '../app/shared/snack-bar.component';
+import { NotificationService } from '../app/shared/services/notification.service';
+import { ClipboardService } from '../app/shared/services/clipboard.service';
 
 @Component({
   selector: 'app-product-edit',
@@ -22,6 +23,7 @@ export class ProductEditComponent implements OnInit {
   private readonly notification = inject(NotificationService);
   private readonly locale = inject(LOCALE_ID);
   private readonly location = inject(Location);
+  private readonly clipboardService = inject(ClipboardService);
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -73,11 +75,7 @@ export class ProductEditComponent implements OnInit {
   copyToClipboard(): void {
     const id = this.productForm.getRawValue().idProduct;
     if (id) {
-      navigator.clipboard.writeText(id).then(() => {
-        console.log('ID copiado!');
-      }).catch(err => {
-        console.error('Erro ao copiar ID:', err);
-      });
+      this.clipboardService.copyToClipboard(id);
     }
   }
 }

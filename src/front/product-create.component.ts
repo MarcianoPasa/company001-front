@@ -4,7 +4,7 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router } from '@angular/router';
 import { ProductService } from '../service/product.service';
 import { Product } from '../model/product.model';
-import { NotificationService } from '../app/shared/snack-bar.component';
+import { NotificationService } from '../app/shared/services/notification.service';
 
 @Component({
   selector: 'app-product-create',

@@ -4,9 +4,9 @@ import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angula
 import { Router } from '@angular/router';
 import { CustomerService } from '../service/customer.service';
 import { Customer } from '../model/customer.model';
-import { CnpjPipe } from '../app/shared/cnpj.pipe';
-import { CnpjMaskDirective } from '../app/shared/cnpj-mask.directive';
-import { NotificationService } from '../app/shared/snack-bar.component';
+import { CnpjPipe } from '../app/shared/pipes/cnpj.pipe';
+import { CnpjMaskDirective } from '../app/shared/directives/cnpj-mask.directive';
+import { NotificationService } from '../app/shared/services/notification.service';
 
 @Component({
   selector: 'app-customer-create',
