@@ -1,34 +1,27 @@
 import { Routes } from '@angular/router';
 import { ProductListComponent } from '../front/product-list.component';
-import { ProductEditComponent } from '../front/product-edit.component';
-import { ProductCreateComponent } from '../front/product-create.component';
 import { PrincipalComponent } from '../front/principal.component';
 import { CustomerListComponent } from '../front/customer-list.component';
-import { CustomerEditComponent } from '../front/customer-edit.component';
-import { CustomerCreateComponent } from '../front/customer-create.component';
+import { ProductFormComponent } from '../front/product-form.component';
+import { PageNotFoundComponent } from '../front/page-not-found.component';
+import { CustomerFormComponent } from '../front/customer-form.component';
 
 export const routes: Routes = [
 
-  { path: 'pricipal', component: PrincipalComponent },
-
   { path: 'products', component: ProductListComponent },
-
-  { path: 'products/edit/:id', component: ProductEditComponent },
-
-  { path: 'products/new', component: ProductCreateComponent },
+  { path: 'products/new', component: ProductFormComponent },
+  { path: 'products/edit/:id', component: ProductFormComponent },
 
   { path: 'customers', component: CustomerListComponent },
+  { path: 'customers/new', component: CustomerFormComponent },
+  { path: 'customers/edit/:id', component: CustomerFormComponent },
 
-  { path: 'customers/edit/:id', component: CustomerEditComponent },
+  { path: 'principal', component: PrincipalComponent },
 
-  { path: 'customers/new', component: CustomerCreateComponent },
+  // If the URL is empty, redirect to "/principal"
+  { path: '', redirectTo: 'principal', pathMatch: 'full' },
 
-  // { path: 'customer/new', component: CustomerCreateComponent },
-
-  // Se a URL estiver vazia, vá para /produtos
-  { path: '', redirectTo: 'pricipal', pathMatch: 'full' },
-
-  // Rota de "página não encontrada" (opcional)
-  { path: '**', redirectTo: 'pricipal' }
+  // Route for "page not found"
+  { path: '**', component: PageNotFoundComponent }
 
 ];

@@ -1,0 +1,75 @@
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="card-header bg-light">
+      <h2 class="mb-0">{{ isEditMode ? 'Editar Produto' : 'Cadastrar Novo Produto' }}</h2>
+    </div>
+
+    <div class="card-body">
+      @if (!loading) {
+        <form [formGroup]="productForm" (ngSubmit)="saveProduct()">
+          @if (isEditMode) {
+            <div class="mb-3">
+              <label for="id" class="form-label">ID do Produto</label>
+              <div class="input-group">
+                <button
+                  class="btn btn-outline-secondary"
+                  type="button"
+                  title="Copiar ID"
+                  (click)="copyToClipboard()">
+                  <i class="bi bi-clipboard"></i>
+                </button>
+                <input
+                  type="text"
+                  class="form-control bg-light"
+                  id="id"
+                  formControlName="idProduct"
+                  readonly>
+              </div>
+            </div>
+          }
+
+          <div class="mb-3">
+            <label for="name" class="form-label">Nome do produto</label>
+            <input
+              #nameInput
+              type="text"
+              class="form-control"
+              id="name"
+              formControlName="name"
+              [class.is-invalid]="productForm.get('name')?.invalid && productForm.get('name')?.touched">
+            <div class="invalid-feedback">O nome é obrigatório (mínimo 3 caracteres).</div>
+          </div>
+
+          <div class="mb-3">
+            <label for="value" class="form-label">Preço (R$)</label>
+            <input
+              type="text"
+              class="form-control"
+              id="value"
+              formControlName="valueFormatted"
+              [class.is-invalid]="productForm.get('valueFormatted')?.invalid && productForm.get('valueFormatted')?.touched">
+            <div class="invalid-feedback">Informe um preço válido.</div>
+          </div>
+
+          <div class="mt-4 border-top pt-3">
+            <button type="submit" class="btn btn-success me-2" [disabled]="productForm.invalid || saving">
+              @if (saving) {
+                <span class="spinner-border spinner-border-sm me-1"></span>
+              }
+              {{ isEditMode ? 'Salvar Alterações' : 'Salvar Produto' }}
+            </button>
+            <button type="button" class="btn btn-secondary" (click)="goBack()">
+              Cancelar
+            </button>
+          </div>
+        </form>
+      } @else {
+        <div class="text-center py-5">
+          <output class="spinner-border text-primary"></output>
+          <p class="mt-2">Carregando dados do produto...</p>
+        </div>
+      }
+    </div>
+  </div>
+</div>
+
