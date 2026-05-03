@@ -1,4 +1,4 @@
-import { Component, ElementRef, inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, inject, LOCALE_ID, OnInit, ViewChild } from '@angular/core';
 import { CommonModule, formatNumber, Location } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,12 +23,14 @@ export class ProductFormComponent implements OnInit {
   private readonly notification = inject(NotificationService);
   private readonly clipboard = inject(ClipboardService);
   private _nameInput?: ElementRef<HTMLInputElement>;
+  private readonly cdr = inject(ChangeDetectorRef);
 
   productForm!: FormGroup;
   isEditMode = false;
   loading = false;
   saving = false;
   idProduct: string | null = null;
+  imagePreview: string | null = null;
 
   @ViewChild('nameInput') set nameInput(element: ElementRef<HTMLInputElement>) {
     if (element) {
@@ -48,7 +50,8 @@ export class ProductFormComponent implements OnInit {
     this.productForm = this.fb.group({
       idProduct: [{ value: '', disabled: true }],
       name: ['', [Validators.required, Validators.minLength(3)]],
-      valueFormatted: ['', Validators.required]
+      valueFormatted: ['', Validators.required],
+      image: ['']
     });
   }
 
@@ -68,10 +71,14 @@ export class ProductFormComponent implements OnInit {
           ...product,
           valueFormatted: formatNumber(product.value, this.locale, '1.2-2')
         });
+        if (product.image) {
+          this.imagePreview = 'data:image/png;base64,' + product.image;
+        }
+        this.loading = false;
       },
       error: () => {
         this.loading = false;
-        this.notification.showMessage('error ao carregar produto', 'snack-error');
+        this.notification.showMessage('Erro ao carregar produto', 'snack-error');
         this.goBack();
       }
     });
@@ -121,5 +128,38 @@ export class ProductFormComponent implements OnInit {
 
   goBack(): void {
     this.location.back();
+  }
+
+  onFileSelected(event: any): void {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = () => {
+        this.imagePreview = reader.result as string;
+        this.productForm.patchValue({ image: this.imagePreview });
+        this.cdr.detectChanges();
+        event.target.value = '';
+      };
+      reader.readAsDataURL(file);
+    }
+  }
+
+  downloadImage(): void {
+    if (!this.imagePreview) {
+      return
+    };
+
+    const link = document.createElement('a');
+    const productName = this.productForm.get('name')?.value || 'produto';
+
+    link.download = `foto-${productName.toLowerCase().replace(/\s+/g, '-')}.png`;
+    link.href = this.imagePreview;
+    link.click();
+    this.notification.showMessage('Download iniciado!', 'snack-success');
+  }
+
+  removeImage(): void {
+    this.imagePreview = null;
+    this.productForm.patchValue({ image: '' });
   }
 }

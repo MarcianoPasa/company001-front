@@ -51,6 +51,37 @@
             <div class="invalid-feedback">Informe um preço válido.</div>
           </div>
 
+          <div class="row mb-4 justify-content-center">
+            <div class="col-md-4 text-center">
+              <label class="form-label d-block" for="imagePreview">Foto do Produto</label>
+              <div class="image-preview-container border rounded mb-2 d-flex align-items-center justify-content-center bg-light"
+                   id="imagePreview"
+                   style="height: 200px; cursor: pointer;"
+                   (click)="fileInput.click()"
+                   onkeypress="">
+
+                @if (imagePreview) {
+                  <img [src]="imagePreview" class="img-fluid rounded" style="max-height: 100%; object-fit: contain;" alt="Preview">
+                } @else {
+                  <div class="text-secondary text-center">
+                    <i class="bi bi-camera fs-1"></i>
+                    <p class="small mb-0">Clique para selecionar</p>
+                  </div>
+                }
+              </div>
+              <input #fileInput type="file" (change)="onFileSelected($event)" accept="image/*" class="d-none">
+
+              @if (imagePreview) {
+                <button type="button" class="btn btn-sm btn-outline-primary me-2" (click)="downloadImage()">
+                  <i class="bi bi-download me-1"></i> Download
+                </button>
+                <button type="button" class="btn btn-sm btn-outline-danger" (click)="removeImage()">
+                  <i class="bi bi-trash me-1"></i> Remover
+                </button>
+              }
+            </div>
+          </div>
+
           <div class="mt-4 border-top pt-3">
             <button type="submit" class="btn btn-success me-2" [disabled]="productForm.invalid || saving">
               @if (saving) {
