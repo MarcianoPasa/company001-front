@@ -5,7 +5,7 @@ import { RouterLink } from "@angular/router";
 import { BehaviorSubject, combineLatest, map, Observable, switchMap, tap} from 'rxjs';
 import { ProductPaginatorIntl } from './product-paginator-intl-0001';
 import { MatPaginatorIntl, MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { Product } from '../model/product.model';
+import { Product, ProductList } from '../model/product.model';
 import { NotificationService } from '../app/shared/services/notification.service';
 import { MatDialog } from '@angular/material/dialog';
 import { ConfirmDialogComponent } from './confirm-dialog.component';
@@ -39,18 +39,24 @@ export class ProductListComponent {
     totalElements: 0
   });
 
-  readonly products$: Observable<Product[]> = combineLatest([
+  readonly products$: Observable<ProductList[]> = combineLatest([
     this.refresh$,
     this.pageState$
   ]).pipe(
       tap(() => this.loading = true),
       switchMap(([_, page]) => this.service.list(page.index, page.size)),
-      tap((res: any) => {
+      tap((res: any) => {        
         this.totalElements = res.page?.totalElements ?? 0;
         this.loading = false;
       }),
       map((res: any) => {
-        return res._embedded?.productModelList ?? [];
+        if (res._embedded) {
+          const keys = Object.keys(res._embedded);
+          if (keys.length > 0) {
+            return res._embedded[keys[0]];
+          }
+        }
+        return [];
       })
   );
 

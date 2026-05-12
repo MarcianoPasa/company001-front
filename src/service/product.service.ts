@@ -1,9 +1,8 @@
 
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Product } from '../model/product.model';
+import { Product, ProductPage } from '../model/product.model';
 import { Observable } from 'rxjs';
-import { ProductPage } from '../model/product-page.model';
 
 @Injectable({
   providedIn: 'root'
@@ -23,23 +22,27 @@ export class ProductService {
   }
 
   list(page: number = 0, size: number = 5): Observable<ProductPage> {
-    return this.http.get<ProductPage>(`${this.API}?page=${page}&size=${size}`);
+    const url = `${this.API}?page=${page}&size=${size}`;
+    return this.http.get<ProductPage>(url);
   }
 
   getById(id: string): Observable<Product> {
-    return this.http.get<Product>(`${this.API}/${id}`);
+    const url = `${this.API}/${id}`;
+    return this.http.get<Product>(url);
   }
 
   create(product: Product): Observable<Product> {
     return this.http.post<Product>(this.API, product);
   }
 
-  update(id: string, product: Product): Observable<Product> {
-    return this.http.put<Product>(`${this.API}/${id}`, product);
+  update(id: string, product: any): Observable<Product> { 
+    const url = `${this.API}/${id}`;
+    return this.http.put<Product>(url, product);
   }
 
   delete(id: string): Observable<string> {
-    return this.http.delete(`${this.API}/${id}`, { responseType: 'text' });
+    const url = `${this.API}/${id}`;
+    return this.http.delete(url, { responseType: 'text' });
   }
 }
 

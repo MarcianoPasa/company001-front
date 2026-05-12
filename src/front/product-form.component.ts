@@ -3,7 +3,6 @@ import { CommonModule, formatNumber, Location } from '@angular/common';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ProductService } from '../service/product.service';
-import { Product } from '../model/product.model';
 import { NotificationService } from '../app/shared/services/notification.service';
 import { ClipboardService } from '../app/shared/services/clipboard.service';
 
@@ -31,6 +30,7 @@ export class ProductFormComponent implements OnInit {
   saving = false;
   idProduct: string | null = null;
   imagePreview: string | null = null;
+  imageFullRes: string | null = null;
 
   @ViewChild('nameInput') set nameInput(element: ElementRef<HTMLInputElement>) {
     if (element) {
@@ -50,8 +50,7 @@ export class ProductFormComponent implements OnInit {
     this.productForm = this.fb.group({
       idProduct: [{ value: '', disabled: true }],
       name: ['', [Validators.required, Validators.minLength(3)]],
-      valueFormatted: ['', Validators.required],
-      image: ['']
+      valueFormatted: ['', Validators.required]
     });
   }
 
@@ -64,17 +63,29 @@ export class ProductFormComponent implements OnInit {
   }
 
   private loadProduct(): void {
+    const id = this.idProduct;
+    if (!id) return;
+
     this.loading = true;
-    this.service.getById(this.idProduct!).subscribe({
+    this.service.getById(id).subscribe({
       next: (product) => {
         this.productForm.patchValue({
           ...product,
           valueFormatted: formatNumber(product.value, this.locale, '1.2-2')
         });
+
         if (product.image) {
-          this.imagePreview = 'data:image/png;base64,' + product.image;
+          this.imageFullRes = 'data:image/png;base64,' + product.image;
         }
+
+        if (product.thumbnail) {
+          this.imagePreview = 'data:image/png;base64,' + product.thumbnail;
+        } else {
+          this.imagePreview = this.imageFullRes;
+        }
+
         this.loading = false;
+        this.cdr.detectChanges();
       },
       error: () => {
         this.loading = false;
@@ -82,7 +93,6 @@ export class ProductFormComponent implements OnInit {
         this.goBack();
       }
     });
-    this.loading = false;
   }
 
   saveProduct(): void {
@@ -91,12 +101,20 @@ export class ProductFormComponent implements OnInit {
     }
 
     this.saving = true;
-    const formValue = this.productForm.getRawValue();
-    const rawValue = formValue.valueFormatted.replaceAll('.', '').replaceAll(',', '.');
+    this.cdr.detectChanges();
 
-    const productData: Product = {
-      ...formValue,
-      value: Number.parseFloat(rawValue) || 0
+    const formValue = this.productForm.getRawValue();
+
+    const rawValue = formValue.valueFormatted
+      .replace(/\./g, '')
+      .replace(',', '.');
+
+    const productData: any = {
+      name: formValue.name,
+      value: Number.parseFloat(rawValue) || 0,
+      image: this.imageFullRes?.includes(',')
+            ? this.imageFullRes.split(',')[1]
+            : null
     };
 
     const request$ = this.isEditMode
@@ -105,16 +123,14 @@ export class ProductFormComponent implements OnInit {
 
     request$.subscribe({
       next: () => {
-        this.notification.showMessage(
-          `Produto ${this.isEditMode ? 'atualizado' : 'criado'} com sucesso!`,
-          'snack-success'
-        );
+        this.notification.showMessage('Produto salvo com sucesso!', 'snack-success');
         this.router.navigate(['/products']);
       },
       error: (err) => {
-        console.error(err);
-        this.notification.showMessage('Erro ao salvar produto', 'snack-error');
         this.saving = false;
+        this.cdr.detectChanges();
+        console.error('Erro detalhado:', err);
+        this.notification.showMessage('Erro ao salvar. Verifique o console.', 'snack-error');
       }
     });
   }
@@ -135,8 +151,10 @@ export class ProductFormComponent implements OnInit {
     if (file) {
       const reader = new FileReader();
       reader.onload = () => {
-        this.imagePreview = reader.result as string;
-        this.productForm.patchValue({ image: this.imagePreview });
+        const result = reader.result as string;
+        this.imagePreview = result;
+        this.imageFullRes = result;
+        this.productForm.patchValue({ image: result });
         this.cdr.detectChanges();
         event.target.value = '';
       };
@@ -145,21 +163,24 @@ export class ProductFormComponent implements OnInit {
   }
 
   downloadImage(): void {
-    if (!this.imagePreview) {
-      return
-    };
+    const contentToDownload = this.imageFullRes || this.imagePreview;
+
+    if (!contentToDownload) {
+      return;
+    }
 
     const link = document.createElement('a');
     const productName = this.productForm.get('name')?.value || 'produto';
 
     link.download = `foto-${productName.toLowerCase().replace(/\s+/g, '-')}.png`;
-    link.href = this.imagePreview;
+    link.href = contentToDownload;
     link.click();
-    this.notification.showMessage('Download iniciado!', 'snack-success');
+    this.notification.showMessage('Download iniciado (Alta Resolução)!', 'snack-success');
   }
 
   removeImage(): void {
     this.imagePreview = null;
+    this.imageFullRes = null;
     this.productForm.patchValue({ image: '' });
-  }
+  }  
 }
